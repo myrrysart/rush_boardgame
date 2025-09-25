@@ -20,7 +20,8 @@ class Santorini
         //There are more domes than lvl 3 pieces so domes cannot run out;
 
         void initWorkers();
-        bool isValidInput(const std::pair<int, int> &input);
+        bool isValidInput(const std::pair<int, int> &input, int player);
+        int moveWorker(int Player);
 
         class Cell
         {
