@@ -1,0 +1,57 @@
+
+#include "Santorini.hpp"
+
+
+void Santorini::initWorkers()
+{
+
+    std::pair<int, int> input = {-1, -1};
+
+     while (isValidInput(input) == false)
+        input = take_input();
+    
+    _board[input.first][input.second].worker = 1;
+    
+    print();
+
+    std::cout << "Player one choose an empty grid to place second worker" << std::endl;
+
+     while (isValidInput(input) == false || mySant._board[input.first][input.second].worker != 0)
+        input = take_input();
+    
+    _board[input.first][input.second].worker = 1;
+    print();
+
+    std::cout << "Player two choose an empty grid to place first worker" << std::endl;
+
+     while (isValidInput(input) == false || mySant._board[input.first][input.second].worker != 0)
+        input = take_input();
+    print();
+
+    _board[input.first][input.second].worker = 2;
+
+     std::cout << "Player two choose an empty grid to place second worker" << std::endl;
+
+     while (isValidInput(input) == false || mySant._board[input.first][input.second].worker != 0)
+        input = take_input();
+    print();
+    
+    _board[input.first][input.second].worker = 2;
+}
+
+
+bool Santorini::isValidInput(const std::pair<int, int> &input)
+{
+    if (input.first == GIVEUP)
+        exit;
+    if (input.first < 0)
+        return false;
+    if (input.first > 4)
+        return false;
+    if (input.second < 0)
+        return false;
+    if (input.second > 4)
+        return false;
+    return true;
+
+}
