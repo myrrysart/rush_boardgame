@@ -6,6 +6,7 @@
 class Santorini
 {
     public:
+    bool gameRunning = true;
     int lvl_1_piece = 22;
     int lvl_2_piece = 18;
     int lvl_3_piece = 14;
