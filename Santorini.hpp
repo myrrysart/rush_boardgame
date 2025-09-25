@@ -21,7 +21,7 @@ class Santorini
 
         void initWorkers();
         bool isValidInput(const std::pair<int, int> &input, int player);
-        int moveWorker(int Player);
+        std::pair<int, int> &moveWorker(int Player);
 
         class Cell
         {
