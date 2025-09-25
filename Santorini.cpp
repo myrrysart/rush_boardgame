@@ -42,7 +42,7 @@ void Santorini::initWorkers()
 
 bool Santorini::isValidInput(const std::pair<int, int> &input, int Player)
 {
-    if (input.first == GIVEUP)
+    if (input == GIVEUP)
     {
         if (Player == PLAYER1)
             std::cout << "Player 2 won";
@@ -62,7 +62,7 @@ bool Santorini::isValidInput(const std::pair<int, int> &input, int Player)
 
 }
 
-std::pair<int, int> &Santorini::moveWorker(int Player)
+std::pair<int, int> Santorini::moveWorker(int Player)
 {
     std::cout << "Select a tile that includes your worker" << std::endl;
 
@@ -76,13 +76,55 @@ std::pair<int, int> &Santorini::moveWorker(int Player)
     
     std::pair<int, int> source = input;
 
-    while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != 0 || std::abs(input.first - source.first) > 1 || std::abs(input.second - source.second) > 1)
+    while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != 0 || std::abs(input.first - source.first) > 1 || std::abs(input.second - source.second) > 1 || _board[input.first][input.second].lvl == 4 )
     {
         input = take_input(); 
     }
     _board[source.first][source.second].worker = 0;
     _board[input.first][input.second].worker = Player;
 
+    if (_board[input.first][input.second].lvl == 3 && Player == PLAYER1)
+        return PLAYER_1_VICTORY;
+    if (_board[input.first][input.second].lvl == 3 && Player == PLAYER2)
+        return PLAYER_2_VICTORY;
+
+
     return input;
+
+}
+
+void Santorini::build(const std::pair<int, int> Workerlocation, int Player)
+{
+    std::cout << "Select a tile to build" << std::endl;
+
+    std::pair<int, int> input = {-1, -1};
+
+    while (isValidInput(input, Player) == false ||  std::abs(input.first - Workerlocation.first) > 1 || std::abs(input.second - Workerlocation.second) > 1 || _board[input.first][input.second].lvl > 3)
+    {
+        input = take_input();
+        if (_board[input.first][input.second].lvl == 0)
+        { 
+            if (lvl_1_piece > 0) 
+                lvl_1_piece--;
+            else
+                continue;
+        }
+        else if (_board[input.first][input.second].lvl == 1)
+        { 
+            if (lvl_2_piece > 0) 
+                lvl_2_piece--;
+            else
+                continue;
+        }
+    else if (_board[input.first][input.second].lvl == 2)
+        { 
+            if (lvl_3_piece > 0) 
+                lvl_3_piece--;
+            else
+                continue;
+        }
+    }
+    
+
 
 }
