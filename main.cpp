@@ -2,10 +2,6 @@
 
 #include "Santorini.hpp"
 
-#define PLAYER_1_VICTORY 200
-#define PLAYER_2_VICTORY 300
-#define PLAYER1 1
-#define PLAYER2 2
 
 int main(void)
 {
