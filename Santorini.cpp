@@ -1,45 +1,6 @@
 
 #include "Santorini.hpp"
 
-
-void Santorini::initWorkers()
-{
-
-    std::pair<int, int> input = {-1, -1};
-
-     while (isValidInput(input, PLAYER1) == false)
-        input = take_input();
-    
-    _board[input.first][input.second].worker = 1;
-    
-    print();
-
-    std::cout << "Player one choose an empty grid to place second worker" << std::endl;
-
-     while (isValidInput(input, PLAYER1) == false || _board[input.first][input.second].worker != 0)
-        input = take_input();
-    
-    _board[input.first][input.second].worker = 1;
-    print();
-
-    std::cout << "Player two choose an empty grid to place first worker" << std::endl;
-
-     while (isValidInput(input, PLAYER2) == false || _board[input.first][input.second].worker != 0)
-        input = take_input();
-    print();
-
-    _board[input.first][input.second].worker = 2;
-
-     std::cout << "Player two choose an empty grid to place second worker" << std::endl;
-
-     while (isValidInput(input, PLAYER2) == false || _board[input.first][input.second].worker != 0)
-        input = take_input();
-    print();
-    
-    _board[input.first][input.second].worker = 2;
-}
-
-
 bool Santorini::isValidInput(const std::pair<int, int> &input, int Player)
 {
     if (input == GIVEUP)
@@ -59,77 +20,106 @@ bool Santorini::isValidInput(const std::pair<int, int> &input, int Player)
     if (input.second > 4)
         return false;
     return true;
-
 }
 
-std::pair<int, int> Santorini::moveWorker(int Player)
+bool Santorini::placeWorker(const std::pair<int, int> &coords, int player)
 {
-    std::cout << "Select a tile that includes your worker" << std::endl;
-
-    std::pair<int, int> input = {-1, -1};
-
-    while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != Player)
-    {
-        input = take_input();   
-    }
-    std::cout << "Select a tile to move to" << std::endl;
-    
-    std::pair<int, int> source = input;
-
-    while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != 0
-        || std::abs(input.first - source.first) > 1 || std::abs(input.second - source.second) > 1
-        || _board[input.first][input.second].lvl == 4
-        || _board[input.first][input.second].lvl > _board[source.first][source.second].lvl + 1 )
-    {
-        input = take_input(); 
-    }
-    _board[source.first][source.second].worker = 0;
-    _board[input.first][input.second].worker = Player;
-
-    if (_board[input.first][input.second].lvl == 3 && Player == PLAYER1)
-        return PLAYER_1_VICTORY;
-    if (_board[input.first][input.second].lvl == 3 && Player == PLAYER2)
-        return PLAYER_2_VICTORY;
-
-
-    return input;
-
+	if (this._board[coords.first][coords.second].worker == 0)
+	{
+		this._board[coords.first][coords.second].worker = player;
+		return true;
+	}
+	else
+		return false;
 }
 
-void Santorini::build(const std::pair<int, int> Workerlocation, int Player)
+bool Santorini::chooseWorker(const std::pair<int, int> &coords, int player)
 {
-    std::cout << "Select a tile to build" << std::endl;
+	if (this._board[coords.first][coords.second].worker == player)
+	{
+		this.chosenSquare = coords;
+		return true;
+	}
+	else
+		return false;
+}
 
-    std::pair<int, int> input = {-1, -1};
 
-    while (isValidInput(input, Player) == false ||  std::abs(input.first - Workerlocation.first) > 1
-        || std::abs(input.second - Workerlocation.second) > 1 || _board[input.first][input.second].lvl > 3
-        || _board[input.first][input.second].worker != 0)
-    {
-        input = take_input();
-        if (_board[input.first][input.second].lvl == 0)
-        { 
-            if (lvl_1_piece > 0) 
-                lvl_1_piece--;
-            else
-                continue;
-        }
-        else if (_board[input.first][input.second].lvl == 1)
-        { 
-            if (lvl_2_piece > 0) 
-                lvl_2_piece--;
-            else
-                continue;
-        }
-    else if (_board[input.first][input.second].lvl == 2)
-        { 
-            if (lvl_3_piece > 0) 
-                lvl_3_piece--;
-            else
-                continue;
-        }
-    }
+
+bool Santorini::moveWorker(const std::pair<int, int> &coords, int player)
+{
     
+    if (this._board[coords.first][coords.second].worker != 0 )
+	{
+		std::cout << "Square occupied" <<std::endl;
+		return false;
+	}
+	if (std::abs(coords.first - this.chosenSquare.first) > 1 || std::abs(coords.second - this.chosenSquare.second) > 1
+		|| (coords.first == this.chosenSquare.first && coords.second == this.chosenSquare.second))
+	{
+		std::cout << "Need to move exactly one square" <<std::endl;
+		return false;
+	}
+	if (this._board[coords.first][coords.second].lvl == 4)
+	{
+		std::cout << "Square has a dome" <<std::endl;
+		return false;
+	}
+	if (this._board[coords.first][coords.second].lvl > this._board[this.chosenSquare.first][this.chosenSquare.second].lvl + 1 )
+    {
+    	std::cout << "Target more than one level above worker" <<std::endl;
+		return false;
+    }
+	
+    this._board[this.chosenSquare.first][this.chosenSquare.second].worker = 0;
+    this._board[coords.first][coords.second].worker = player;
+	this.chosenSquare = coords;
+    return true;
+}
+
+bool Santorini::build(const std::pair<int, int> &coords, int player)
+{
+    if (std::abs(coords.first - this.chosenSquare.first) > 1 || std::abs(coords.second - this.chosenSquare.second) > 1)
+	{
+		std::cout << "Too far from worker" <<std::endl;
+		return false;
+	}
+	if (this._board[coords.first][coords.second].lvl > 3)
+	{
+		std::cout << "Fully built already" <<std::endl;
+		return false;
+	}
+	if (this._board[coords.first][coords.second].worker != 0)
+	{
+		std::cout << "Square occupied" <<std::endl;
+		return false;
+	}
+	if (this.pieces[this._board[coords.first][coords.second].lvl] == 0)
+    { 
+      	std::cout << "No more required pieces" <<std::endl;
+		return false;
+	}
     // After validation and piece availability, increment the level to build
-    _board[input.first][input.second].lvl++;
+	this.pieces[this._board[coords.first][coords.second].lvl]--;
+    this._board[coords.first][coords.second].lvl++;
+	this.chosenSquare = {-1, -1};
+	return true;
+}
+
+void	Santorini::printBoard()
+{
+	for (i = 0; i < 5; ++i)
+	{
+		std::cout << "|";
+		for (j = 0; j < 5; ++j)
+		{
+			std::cout << this._board[i][j].lvl;
+			if (this._board[i][j].worker == PLAYER1)
+				std::cout << "P1";
+			if (this._board[i][j].worker == PLAYER2)
+				std::cout << "P2";
+			std::cout << "|";
+		}
+		std::cout << std::endl;
+	}
 }

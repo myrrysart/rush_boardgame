@@ -9,20 +9,32 @@
 #define PLAYER2 2
 #define GIVEUP std::pair{-200, 0}
 
+enum e_state {
+	PLAYER1_INIT_WORKER1,
+	PLAYER1_INIT_WORKER2,
+	PLAYER1_CHOOSE_WORKER,
+	PLAYER1_MOVE_WORKER,
+	PLAYER1_BUILD,
+	PLAYER2_INIT_WORKER1,
+	PLAYER2_INIT_WORKER2,
+	PLAYER2_CHOOSE_WORKER,
+	PLAYER2_MOVE_WORKER,
+	PLAYER2_BUILD
+}
 
 class Santorini
 {
     public:
         bool gameRunning = true;
-        int lvl_1_piece = 22;
-        int lvl_2_piece = 18;
-        int lvl_3_piece = 14;
+        int pieces[4] = {22, 18, 14, 18};
         //There are more domes than lvl 3 pieces so domes cannot run out;
 
-        void initWorkers();
         bool isValidInput(const std::pair<int, int> &input, int player);
-        std::pair<int, int> moveWorker(int Player);
-        void build(const std::pair<int, int> Workerlocation, int Player);
+		bool Santorini::placeWorker(const std::pair<int, int> &coords, int player);
+		bool Santorini::chooseWorker(const std::pair<int, int> &coords, int player);
+		bool Santorini::moveWorker(const std::pair<int, int> &coords, int player);
+		bool Santorini::build(const std::pair<int, int> &coords, int player);
+        void Santorini::printBoard();
 
         class Cell
         {
@@ -32,6 +44,6 @@ class Santorini
         };
 
         Cell _board[5][5];
-    
-
+		e_state gameState;
+		std::pair<int, int> chosenSquare;
 };

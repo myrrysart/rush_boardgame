@@ -2,6 +2,7 @@
 #include <iostream>
 #include <utility>
 #include "TextBox.hpp"
+#include "Santorini.hpp"
 
 //return the screen coordinates of the left corner of the selected tile
 //add an offset based on bulding height?
@@ -30,8 +31,54 @@ std::pair<int, int> screenToBoard(std::pair<int, int> click)
 	return {boardX, boardY};
 }
 
-void handleClick(sf::Event::MouseButtonEvent click)
+void handleClick(sf::Event::MouseButtonEvent click, Santorini &game)
 {
+	std::pair<int, int> coords = screenToBoard({click.x, click.y});
+	int player;
+	if (game.gameState < PLAYER2_INIT_WORKER1)
+		player = PLAYER1;
+	else
+		player = PLAYER2;
+	if (!Santorini::isValidInput(coords, player))
+		std::cout << "click out of bounds" << std::endl;
+		return;
+	switch (game.gameState)
+	{
+		case PLAYER1_INIT_WORKER1:
+			if (game.placeWorker(coords, player))
+				game.gameState++;
+			break;
+		case PLAYER1_INIT_WORKER2:
+			if (game.placeWorker(coords, player))
+				game.gameState = PLAYER2_INIT_WORKER1;
+			break;
+		case PLAYER1_CHOOSE_WORKER:
+		case PLAYER2_CHOOSE_WORKER:
+			if (game.chooseWorker(coords, player))
+				game.gameState++;
+			break;
+		case PLAYER1_MOVE_WORKER:
+		case PLAYER2_MOVE_WORKER:
+			if (game.moveWorker(coords, player)
+				game.gameState++;
+			break;
+		case PLAYER1_BUILD:
+		case PLAYER2_BUILD:
+			if (game.build(coords, player))
+				game.gameState = static_cast<e_state>(game.gameState + 3);
+			break;
+		case PLAYER2_INIT_WORKER1:
+			if (game.placeWorker(coords, player))
+				game.gameState++;
+			break;
+		case PLAYER2_INIT_WORKER2:
+			if (game.placeWorker(coords, player))
+				game.gameState = PLAYER1_CHOOSE_WORKER;
+			break;
+		default:
+			break;
+	}
+
 	std::cout << "screen : (" << click.x << "," <<  click.y << ")" << std::endl;
 	std::pair<int, int> coords = screenToBoard({click.x, click.y});
 	std::cout << "coords : (" << coords.first << "," <<  coords.second << ")" << std::endl;
@@ -58,9 +105,9 @@ int main()
 	textBox.setPosition(10.f, 10.f);
 
 	//dummy values for textbox
-	int AP = 1;
 	int turn = 0;
-	std::vector<int> tokens = {22, 18, 14, 18};
+	Santorini mySant;
+	int player;
 
     while (window.isOpen())
     {
@@ -79,14 +126,18 @@ int main()
 
 				case sf::Event::MouseButtonPressed:
 					if (event.mouseButton.button == sf::Mouse::Left)
-						handleClick(event.mouseButton);
+						handleClick(event.mouseButton, mySant);
 					break;
 				
 				default:
 					break;
 			}
         }
-		textBox.setValues(AP, turn, tokens);
+		if (game.gameState < PLAYER2_INIT_WORKER1)
+			player = PLAYER1;
+		else
+			player = PLAYER2;
+		textBox.setValues(player, turn, mySant.pieces);
         window.clear();
 	    window.draw(basemap);
 		textBox.draw(window);

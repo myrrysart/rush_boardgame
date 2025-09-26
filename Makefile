@@ -2,7 +2,7 @@ SFML_VERSION = 2.6.0
 SFML_DIR = SFML-$(SFML_VERSION)
 SFML_TAR = SFML-$(SFML_VERSION)-linux-gcc-64-bit.tar.gz
 SFML_URL = https://www.sfml-dev.org/files/$(SFML_TAR)
-SOURCE = TextBox.cpp sfmltest.cpp 
+SOURCE = TextBox.cpp sfmltest.cpp Santorini.cpp
 OBJECT = $(SOURCE:%.cpp=%.o)
 TARGET = sfml-app
 
