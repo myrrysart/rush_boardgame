@@ -7,7 +7,7 @@ void Santorini::initWorkers()
 
     std::pair<int, int> input = {-1, -1};
 
-     while (isValidInput(input) == false)
+     while (isValidInput(input, PLAYER1) == false)
         input = take_input();
     
     _board[input.first][input.second].worker = 1;
@@ -16,7 +16,7 @@ void Santorini::initWorkers()
 
     std::cout << "Player one choose an empty grid to place second worker" << std::endl;
 
-     while (isValidInput(input) == false || mySant._board[input.first][input.second].worker != 0)
+     while (isValidInput(input, PLAYER1) == false || _board[input.first][input.second].worker != 0)
         input = take_input();
     
     _board[input.first][input.second].worker = 1;
@@ -24,7 +24,7 @@ void Santorini::initWorkers()
 
     std::cout << "Player two choose an empty grid to place first worker" << std::endl;
 
-     while (isValidInput(input) == false || mySant._board[input.first][input.second].worker != 0)
+     while (isValidInput(input, PLAYER2) == false || _board[input.first][input.second].worker != 0)
         input = take_input();
     print();
 
@@ -32,7 +32,7 @@ void Santorini::initWorkers()
 
      std::cout << "Player two choose an empty grid to place second worker" << std::endl;
 
-     while (isValidInput(input) == false || mySant._board[input.first][input.second].worker != 0)
+     while (isValidInput(input, PLAYER2) == false || _board[input.first][input.second].worker != 0)
         input = take_input();
     print();
     
@@ -40,10 +40,16 @@ void Santorini::initWorkers()
 }
 
 
-bool Santorini::isValidInput(const std::pair<int, int> &input)
+bool Santorini::isValidInput(const std::pair<int, int> &input, int Player)
 {
-    if (input.first == GIVEUP)
-        exit;
+    if (input == GIVEUP)
+    {
+        if (Player == PLAYER1)
+            std::cout << "Player 2 won";
+        else
+            std::cout << "Player 1 won";
+        exit(0);
+    }
     if (input.first < 0)
         return false;
     if (input.first > 4)
@@ -54,4 +60,76 @@ bool Santorini::isValidInput(const std::pair<int, int> &input)
         return false;
     return true;
 
+}
+
+std::pair<int, int> Santorini::moveWorker(int Player)
+{
+    std::cout << "Select a tile that includes your worker" << std::endl;
+
+    std::pair<int, int> input = {-1, -1};
+
+    while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != Player)
+    {
+        input = take_input();   
+    }
+    std::cout << "Select a tile to move to" << std::endl;
+    
+    std::pair<int, int> source = input;
+
+    while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != 0
+        || std::abs(input.first - source.first) > 1 || std::abs(input.second - source.second) > 1
+        || _board[input.first][input.second].lvl == 4
+        || _board[input.first][input.second].lvl > _board[source.first][source.second].lvl + 1 )
+    {
+        input = take_input(); 
+    }
+    _board[source.first][source.second].worker = 0;
+    _board[input.first][input.second].worker = Player;
+
+    if (_board[input.first][input.second].lvl == 3 && Player == PLAYER1)
+        return PLAYER_1_VICTORY;
+    if (_board[input.first][input.second].lvl == 3 && Player == PLAYER2)
+        return PLAYER_2_VICTORY;
+
+
+    return input;
+
+}
+
+void Santorini::build(const std::pair<int, int> Workerlocation, int Player)
+{
+    std::cout << "Select a tile to build" << std::endl;
+
+    std::pair<int, int> input = {-1, -1};
+
+    while (isValidInput(input, Player) == false ||  std::abs(input.first - Workerlocation.first) > 1
+        || std::abs(input.second - Workerlocation.second) > 1 || _board[input.first][input.second].lvl > 3
+        || _board[input.first][input.second].worker != 0)
+    {
+        input = take_input();
+        if (_board[input.first][input.second].lvl == 0)
+        { 
+            if (lvl_1_piece > 0) 
+                lvl_1_piece--;
+            else
+                continue;
+        }
+        else if (_board[input.first][input.second].lvl == 1)
+        { 
+            if (lvl_2_piece > 0) 
+                lvl_2_piece--;
+            else
+                continue;
+        }
+    else if (_board[input.first][input.second].lvl == 2)
+        { 
+            if (lvl_3_piece > 0) 
+                lvl_3_piece--;
+            else
+                continue;
+        }
+    }
+    
+    // After validation and piece availability, increment the level to build
+    _board[input.first][input.second].lvl++;
 }
