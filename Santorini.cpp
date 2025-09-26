@@ -103,7 +103,8 @@ void Santorini::build(const std::pair<int, int> Workerlocation, int Player)
     std::pair<int, int> input = {-1, -1};
 
     while (isValidInput(input, Player) == false ||  std::abs(input.first - Workerlocation.first) > 1
-        || std::abs(input.second - Workerlocation.second) > 1 || _board[input.first][input.second].lvl > 3)
+        || std::abs(input.second - Workerlocation.second) > 1 || _board[input.first][input.second].lvl > 3
+        || _board[input.first][input.second].worker != 0)
     {
         input = take_input();
         if (_board[input.first][input.second].lvl == 0)
