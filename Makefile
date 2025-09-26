@@ -2,14 +2,15 @@ SFML_VERSION = 2.6.0
 SFML_DIR = SFML-$(SFML_VERSION)
 SFML_TAR = SFML-$(SFML_VERSION)-linux-gcc-64-bit.tar.gz
 SFML_URL = https://www.sfml-dev.org/files/$(SFML_TAR)
-SOURCE = sfmltest.cpp
-OBJECT = sfmltest.o
+SOURCE = TextBox.cpp sfmltest.cpp 
+OBJECT = $(SOURCE:%.cpp=%.o)
 TARGET = sfml-app
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECT)
-	g++ $< -o $@ -L./$(SFML_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system
+	export LD_LIBRARY_PATH=./$(SFML_DIR)/lib
+	g++ $(OBJECT) -o $@ -L./$(SFML_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 %.o: %.cpp
 	g++ -c $< -I./$(SFML_DIR)/include
@@ -21,6 +22,12 @@ $(SFML_DIR)/include/SFML/Config.hpp: $(SFML_TAR)
 $(SFML_TAR):
 	wget $(SFML_URL)
 
-.PHONY: clean
+.PHONY: clean fclean re
 clean:
-	rm -rf $(SFML_DIR) $(OBJECT) $(TARGET)
+	rm -rf $(OBJECT)
+
+fclean:	clean
+	rm -rf $(TARGET)
+
+re:		fclean all
+	
