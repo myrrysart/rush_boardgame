@@ -78,7 +78,8 @@ std::pair<int, int> Santorini::moveWorker(int Player)
 
     while (isValidInput(input, Player) == false || _board[input.first][input.second].worker != 0
         || std::abs(input.first - source.first) > 1 || std::abs(input.second - source.second) > 1
-        || _board[input.first][input.second].lvl == 4 )
+        || _board[input.first][input.second].lvl == 4
+        || _board[input.first][input.second].lvl > _board[source.first][source.second].lvl + 1 )
     {
         input = take_input(); 
     }
