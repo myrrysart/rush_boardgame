@@ -2,6 +2,7 @@
 #include "SFML/Window.hpp"
 #include "Textures.hpp"
 #include <algorithm>
+#include <array>
 
 
 bool highestY(const sf::Sprite& a, const sf::Sprite& b)
@@ -19,14 +20,15 @@ int main(void)
 	player1.setTexture(tex.playerBlue);
 	player2.setTexture(tex.playerGreen);
 
-	std::vector<sf::Sprite> tiles;
+	//std::vector<sf::Sprite> tiles;
+	std::array<std::vector<sf::Sprite>, 4> spriteLevels;
 	sf::Sprite level_1_tile;
 	sf::Sprite level_2_tile;
 	sf::Sprite level_3_tile;
 	sf::Sprite blue_dome;
 	sf::Sprite green_dome;
 	level_1_tile.setTexture(tex.tileGrey);
-	level_2_tile.setTexture(tex.tileGrey);
+	level_2_tile.setTexture(tex.tileBlue);
 	level_3_tile.setTexture(tex.tileGreen);
 	blue_dome.setTexture(tex.domeBlue);
 	green_dome.setTexture(tex.domeGreen);
@@ -47,13 +49,23 @@ int main(void)
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			sf::Vector2f mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(win));
-			tiles.push_back(level_1_tile);
-			tiles.back().setPosition(mouse.x - 32.f, mouse.y - 32.f);
+			spriteLevels[0].push_back(level_1_tile);
+			spriteLevels[0].back().setPosition(mouse.x - 32.f, mouse.y - 32.f);
 			//player1.setPosition(mouse.x - 32.f, mouse.y - 32.f);
-			std::sort(tiles.begin(), tiles.end(), highestY);
+			std::sort(spriteLevels[0].begin(), spriteLevels[0].end(), highestY);
+		}
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		{
+			sf::Vector2f mouse = static_cast<sf::Vector2f>(sf::Mouse::getPosition(win));
+			spriteLevels[1].push_back(level_2_tile);
+			spriteLevels[1].back().setPosition(mouse.x - 32.f, mouse.y - 42.f);
+			//player1.setPosition(mouse.x - 32.f, mouse.y - 32.f);
+			std::sort(spriteLevels[1].begin(), spriteLevels[1].end(), highestY);
 		}
 		win.clear();
-		for (auto& tile : tiles)
+		for (auto& tile : spriteLevels[0])
+			win.draw(tile);
+		for (auto& tile : spriteLevels[1])
 			win.draw(tile);
 		win.draw(player1);
 		win.display();
