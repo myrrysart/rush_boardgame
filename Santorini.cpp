@@ -130,6 +130,6 @@ void Santorini::build(const std::pair<int, int> Workerlocation, int Player)
         }
     }
     
-
-
+    // After validation and piece availability, increment the level to build
+    _board[input.first][input.second].lvl++;
 }
