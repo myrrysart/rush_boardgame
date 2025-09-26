@@ -61,11 +61,13 @@ int main()
 	int AP = 1;
 	int turn = 0;
 	std::vector<int> tokens = {22, 18, 14, 18};
+
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
+
 			switch (event.type)
 			{
             	case sf::Event::Closed:
