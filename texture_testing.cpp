@@ -1,6 +1,13 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "Textures.hpp"
+#include <algorithm>
+
+
+bool highestY(const sf::Sprite& a, const sf::Sprite& b)
+{
+	return a.getPosition().y < b.getPosition().y;
+}
 
 int main(void)
 {
@@ -43,8 +50,8 @@ int main(void)
 			tiles.push_back(level_1_tile);
 			tiles.back().setPosition(mouse.x - 32.f, mouse.y - 32.f);
 			//player1.setPosition(mouse.x - 32.f, mouse.y - 32.f);
+			std::sort(tiles.begin(), tiles.end(), highestY);
 		}
-
 		win.clear();
 		for (auto& tile : tiles)
 			win.draw(tile);
@@ -53,3 +60,4 @@ int main(void)
 	}
 	return (0);
 }
+
