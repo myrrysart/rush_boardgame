@@ -31,11 +31,13 @@ int main()
 		std::cout << "Error" << std::endl;
 	sf::Sprite	basemap;
 	basemap.setTexture(board);
+
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
+
 			switch (event.type)
 			{
             	case sf::Event::Closed:
