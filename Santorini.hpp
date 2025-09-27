@@ -2,6 +2,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <array>
 
 #define PLAYER_1_VICTORY std::pair{200, 0}
 #define PLAYER_2_VICTORY std::pair{300, 0}
@@ -14,15 +15,28 @@ class Santorini
 {
     public:
         bool gameRunning = true;
-        int lvl_1_piece = 22;
-        int lvl_2_piece = 18;
-        int lvl_3_piece = 14;
+        std::array<int, 4> pieces = {22, 18, 14, 18};
         //There are more domes than lvl 3 pieces so domes cannot run out;
 
-        void initWorkers();
         bool isValidInput(const std::pair<int, int> &input, int player);
-        std::pair<int, int> moveWorker(int Player);
-        void build(const std::pair<int, int> Workerlocation, int Player);
+		bool placeWorker(const std::pair<int, int> &coords, int player);
+		bool chooseWorker(const std::pair<int, int> &coords, int player);
+		bool moveWorker(const std::pair<int, int> &coords, int player);
+		bool build(const std::pair<int, int> &coords, int player);
+        void printBoard();
+		
+		enum State {
+			PLAYER1_INIT_WORKER1,
+			PLAYER1_INIT_WORKER2,
+			PLAYER1_CHOOSE_WORKER,
+			PLAYER1_MOVE_WORKER,
+			PLAYER1_BUILD,
+			PLAYER2_INIT_WORKER1,
+			PLAYER2_INIT_WORKER2,
+			PLAYER2_CHOOSE_WORKER,
+			PLAYER2_MOVE_WORKER,
+			PLAYER2_BUILD
+		};
 
         class Cell
         {
@@ -32,6 +46,7 @@ class Santorini
         };
 
         Cell _board[5][5];
-    
-
+		State gameState = State::PLAYER1_INIT_WORKER1;
+		std::pair<int, int> chosenSquare = {-1, -1};
+		int turn = 0;
 };
