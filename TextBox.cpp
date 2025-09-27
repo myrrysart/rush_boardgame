@@ -17,7 +17,7 @@ void TextBox::setPosition(float x, float y) {
         updateTextPositions();
     }
 
-void TextBox::setValues(int activePlayer, int turn, const std::vector<int>& tokens) {
+void TextBox::setValues(int activePlayer, int turn, const std::array<int, 4> tokens) {
         // Update each line of text with the current values
         _texts[0].setString("Active Player: " + std::to_string(activePlayer) + " Turn: " + std::to_string(turn));
 		if (tokens.size() != 4)

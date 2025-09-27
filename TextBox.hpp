@@ -2,13 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
+#include <array>
 
 class TextBox {
 public:
     TextBox(const sf::Font& font, unsigned int characterSize);
 
     void setPosition(float x, float y);
-    void setValues(int id, int turn, const std::vector<int>& values);
+    void setValues(int id, int turn, const std::array<int, 4> values);
     void draw(sf::RenderWindow& window);
 
 private:
