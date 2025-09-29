@@ -1,6 +1,15 @@
 
 #include "Santorini.hpp"
 
+int Santorini::victoryCheck()
+{
+	if (this->chosenSquare.first == -1)
+		return 0;
+	if (this->_board[chosenSquare.first][chosenSquare.second].lvl == 3)
+		return (this->_board[chosenSquare.first][chosenSquare.second].worker);
+	return 0;
+}
+
 bool Santorini::isValidInput(const std::pair<int, int> &input, int Player)
 {
     if (input == GIVEUP)
