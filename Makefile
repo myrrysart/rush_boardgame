@@ -9,7 +9,7 @@ TARGET = sfml-app
 all: $(TARGET)
 
 $(TARGET): $(OBJECT)
-	export LD_LIBRARY_PATH=$(SFML_DIR)/lib/
+	LD_LIBRARY_PATH=$(SFML_DIR)/lib/
 	g++ $(OBJECT) -o $@ -L./$(SFML_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 %.o: %.cpp
@@ -30,4 +30,7 @@ fclean:	clean
 	rm -rf $(TARGET)
 
 re:		fclean all
+
+run:	sfml-app
+	LD_LIBRARY_PATH=./$(SFML_DIR)/lib ./sfml-app
 	
