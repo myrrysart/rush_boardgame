@@ -24,6 +24,7 @@ class Santorini
 		bool moveWorker(const std::pair<int, int> &coords, int player);
 		bool build(const std::pair<int, int> &coords, int player);
         void printBoard();
+		int	victoryCheck();
 		
 		enum State {
 			PLAYER1_INIT_WORKER1,

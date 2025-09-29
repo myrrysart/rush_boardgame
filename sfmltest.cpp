@@ -166,7 +166,7 @@ void handleClick(sf::Event::MouseButtonEvent click, Santorini &game, Sprites &sp
 		default:
 			break;
 	}
-	game.printBoard();
+//	game.printBoard();
 /*
 	std::cout << "screen : (" << click.x << "," <<  click.y << ")" << std::endl;
 	std::pair<int, int> c = screenToBoard({click.x, click.y});
@@ -220,7 +220,7 @@ int main()
 					break;
 
 				case sf::Event::MouseButtonPressed:
-					if (event.mouseButton.button == sf::Mouse::Left)
+					if (event.mouseButton.button == sf::Mouse::Left && mySant.gameRunning)
 						handleClick(event.mouseButton, mySant, sprite);
 					break;
 				
@@ -245,6 +245,11 @@ int main()
         for (auto& tile : sprite.spriteLevels[3])
             window.draw(tile);          
         window.display();
+		if (mySant.victoryCheck() != 0 && mySant.gameRunning)
+		{
+			std::cout << "Game was won by player " << mySant.victoryCheck() << std::endl;
+			mySant.gameRunning = false;
+		}
     }
 
     return 0;
