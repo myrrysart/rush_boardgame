@@ -6,7 +6,7 @@ SOURCE = TextBox.cpp sfmltest.cpp Santorini.cpp
 OBJECT = $(SOURCE:%.cpp=%.o)
 TARGET = sfml-app
 
-all: $(TARGET)
+all: $(SFML_DIR)/include/SFML/Config.hpp $(TARGET) 
 
 $(TARGET): $(OBJECT)
 	LD_LIBRARY_PATH=$(SFML_DIR)/lib/
